@@ -1,4 +1,9 @@
 steps:
+  - name: ":hammer: Write metadata"
+    command: buildkite-agent meta-data set "foo" "bar" --job ${BUILDKITE_JOB_ID} --agent-access-token ${$BUILDKITE_AGENT_ACCESS_TOKEN}
+    artifact_paths: "artifacts/*"
+    agents:
+      queue: "${BUILDKITE_AGENT_META_DATA_QUEUE:-default}"
   - name: ":hammer: Example Script"
     command: "script.sh"
     artifact_paths: "artifacts/*"
