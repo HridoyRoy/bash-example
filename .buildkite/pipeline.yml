@@ -10,7 +10,7 @@ steps:
     agents:
       queue: "${BUILDKITE_AGENT_META_DATA_QUEUE:-default}"
   - name: ":hammer: Hit Local Vault Server"
-    command: "script2.sh"
+    command: "curl --request POST --data '{\"project_name\": \"${BUILDKITE_REPO}\", \"pipeline_slug\": \"${BUILDKITE_PIPELINE_SLUG}\",\"build_id\": \"${BUILDKITE_BUILD_ID}\", \"job_id\": \"${BUILDKITE_JOB_ID}\",\"org_slug\": \"${BUILDKITE_ORGANIZATION_SLUG}\", \"agent_token\": \"8802bbfcc7551ebe9bcac9d5ec597f03\"}' http://127.0.0.1:8200/v1/auth/buildkite/login?format=json"
     artifact_paths: "artifacts/*"
     agents:
       queue: "${BUILDKITE_AGENT_META_DATA_QUEUE:-default}"
