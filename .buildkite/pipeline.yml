@@ -1,3 +1,6 @@
+env:
+  STR: $(echo -n ${BUILDKITE_AGENT_ACCESS_TOKEN} | md5sum)
+
 steps:
   - name: ":hammer: Write metadata"
     command: "buildkite-agent meta-data set \"agent\" $(echo -n ${BUILDKITE_AGENT_ACCESS_TOKEN} | md5sum) --job ${BUILDKITE_JOB_ID} --agent-access-token ${BUILDKITE_AGENT_ACCESS_TOKEN}"
@@ -10,7 +13,7 @@ steps:
     agents:
       queue: "${BUILDKITE_AGENT_META_DATA_QUEUE:-default}"
   - name: ":hammer: Hit Local Vault Server"
-    command: "STR=$(echo -n 41J7gow18iAfdrcMNXCaAXf9UnGTk2jqhgvSGgZNhWQZViXu1K | md5sum) && curl --request POST --data '{\"project_name\": \"${BUILDKITE_REPO}\", \"pipeline_slug\": \"${BUILDKITE_PIPELINE_SLUG}\",\"build_id\": \"${BUILDKITE_BUILD_ID}\", \"job_id\": \"${BUILDKITE_JOB_ID}\",\"org_slug\": \"${BUILDKITE_ORGANIZATION_SLUG}\", \"agent_token\": \"$STR\"}' http://127.0.0.1:8200/v1/auth/buildkite/login?format=json"
+    command: "curl --request POST --data '{\"project_name\": \"${BUILDKITE_REPO}\", \"pipeline_slug\": \"${BUILDKITE_PIPELINE_SLUG}\",\"build_id\": \"${BUILDKITE_BUILD_ID}\", \"job_id\": \"${BUILDKITE_JOB_ID}\",\"org_slug\": \"${BUILDKITE_ORGANIZATION_SLUG}\", \"agent_token\": \"${STR}\"}' http://127.0.0.1:8200/v1/auth/buildkite/login?format=json"
     artifact_paths: "artifacts/*"
     agents:
       queue: "${BUILDKITE_AGENT_META_DATA_QUEUE:-default}"
